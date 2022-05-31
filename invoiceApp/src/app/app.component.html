@@ -1,0 +1,177 @@
+<div class="container" *ngIf="!formSubmitted">
+
+  <form  [formGroup]="userForm" (ngSubmit)="submitForm()">
+
+    <div class="d-flex flex-column ">
+
+      <div class="d-flex flex-row justify-content-between  p-3">
+
+        <div>
+          <label>Name :</label>
+          <input type="text" class="form-control" id="name" formControlName="name" placeholder="Client Name" />
+          <div *ngIf="userForm.get('name')?.errors?.required && userForm.get('name')?.touched">Please Enter Name</div>
+        </div>
+
+        <div>
+          <label>Date :</label>
+          <input type="date" class="form-control" id="date" formControlName="date" placeholder="Date" />
+          <div *ngIf="userForm.get('date')?.errors?.required && userForm.get('date')?.touched">Please Enter Date</div>
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-between p-3">
+
+        <div>
+          <label>Address :</label>
+          <input type="text" class="form-control" id="address" formControlName="address" placeholder="Address" />
+          <div *ngIf="userForm.get('address')?.errors?.required && userForm.get('address')?.touched">Please Enter Address</div>
+        </div>
+
+        <div>
+          <label>
+            <input type="checkbox" id="checked" formControlName="checked" placeholder="Date" />
+            Shipping address</label>
+          <p class="p-1">Same as billing</p>
+        </div>
+
+      </div>
+
+
+      <div class="d-flex justify-content-end p-3">
+
+        <div>
+          <button type="button" class="btn btn-primary" [disabled]="!userForm.valid" (click)="addRow()">Add item</button>
+        </div>
+
+      </div>
+
+      <hr class="horizontal">
+      
+      
+
+    </div>
+
+  </form>
+
+  <div *ngIf="displayCart">
+
+
+    <form action="" #invoiceBody="ngForm">
+
+      <div class="row">
+        <div class="col-md-1">
+          <label>#</label>
+        </div>
+        <div class="col-md-2">
+          <label>Item Name</label>
+        </div>
+        <div class="col-md-2">
+          <label>Price</label>
+        </div>
+        <div class="col-md-2">
+          <label>Quantity</label>
+        </div>
+        <div class="col-md-2">
+          <label>Tax</label>
+        </div>
+        <div class="col-md-2">
+          <label>Total</label>
+
+        </div>
+        <div class="col-md-1">
+
+        </div>
+      </div>
+
+      <div *ngFor="let obj of itemsArray;let i=index">
+        <div class="row py-1">
+
+
+          <div class="col-md-1">
+
+            {{i+1}}
+          </div>
+          <div class="col-md-2">
+
+            <input type="text" class="form-control" name="itemNo{{i}}" [(ngModel)]="obj.itemNo">
+          </div>
+          <div class="col-md-2">
+
+            <input type="number" class="form-control" name="unitPrice{{i}}" [(ngModel)]="obj.unitPrice">
+          </div>
+          <div class="col-md-2">
+
+            <input type="number" class="form-control" name="quantity{{i}}" [(ngModel)]="obj.quantity">
+          </div>
+          <div class="col-md-2">
+
+            <input type="number" class="form-control" name="tax{{i}}" [(ngModel)]="obj.tax">
+          </div>
+          <div class="col-md-2">
+            <span>{{getItemTotal(obj)}}</span>
+
+          </div>
+
+          <div class="col-md-1">
+            <button class="btn btn-danger" (click)="removeRow(i)">-</button>
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+      
+  <hr class="horizontal">
+
+      <div class="d-flex p-4 justify-content-end">
+        <div class="d-flex flex-column justify-content-end">
+
+          <div class="form-group d-flex justify-content-between p-1">
+            <label for="TAmount">Total Amount : </label>
+            <span>{{getInvoiceTotal()}}</span>
+          </div>
+
+          <div class="form-group d-flex justify-content-between p-1">
+            <label for="Tax">Tax : </label>
+            <span>{{overAlltax()}}</span>
+          </div>
+
+
+          <div class="form-group d-flex justify-content-between p-1">
+            <label for="Amount">Amount : </label>
+            <span>{{getInvoiceTotal() - overAlltax()}}</span>
+          </div>
+
+
+          <div class="form-group d-flex justify-content-between p-1">
+            <label for="Received">Received : </label>
+            <input type="number" name="Received" [(ngModel)]="Received">
+          </div>
+
+          <div class="form-group d-flex justify-content-between p-1">
+            <label for="Remaining">Remaining : </label>
+            <span>{{getInvoiceTotal() - Received}}</span>
+          </div>
+        </div>
+      </div>
+
+
+      <button type="submit" class="btn btn-primary" [disabled]="(!getInvoiceTotal() || Received==0)" (click)="submitForm()">Submit</button>
+
+    </form>
+
+
+
+  </div>
+
+
+</div>
+
+<div class="container" *ngIf="formSubmitted">
+
+  <div class="d-flex justify-content-center align-item-center">Thankyou for your Invoive </div>
+
+</div>
